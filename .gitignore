@@ -63,3 +63,4 @@ Thumbs.db
 # Project specific
 # ================================
 *.log
+backend/src/Host/WebApi/appsettings.Development.json
