@@ -1,0 +1,65 @@
+# ================================
+# .NET
+# ================================
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+bld/
+bin/
+obj/
+
+## Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.cache
+*.dbmdl
+
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+## dotnet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ================================
+# Node / Angular
+# ================================
+node_modules/
+dist/
+tmp/
+out-tsc/
+.angular/
+
+## npm
+npm-debug.log*
+yarn-error.log*
+
+## Environment files
+.env
+.env.local
+.env.*.local
+
+# ================================
+# IDE / Editors
+# ================================
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# ================================
+# Project specific
+# ================================
+*.log
