@@ -1,0 +1,58 @@
+<div class="shop-container">
+  <h1>Products</h1>
+
+  <mat-chip-listbox class="category-filters" aria-label="Category filter">
+    <mat-chip-option
+      [selected]="selectedCategoryId === null"
+      (click)="filterByCategory(null)">
+      All
+    </mat-chip-option>
+    @for (category of categories; track category.id) {
+      <mat-chip-option
+        [selected]="selectedCategoryId === category.id"
+        (click)="filterByCategory(category.id)">
+        {{ category.name }}
+      </mat-chip-option>
+    }
+  </mat-chip-listbox>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-message">
+      {{ error }}
+    </div>
+  }
+
+  @if (!loading && !error) {
+    <div class="products-grid">
+      @for (product of products; track product.id) {
+        <mat-card class="product-card" [routerLink]="['/shop', product.id]">
+          <div class="product-image-placeholder">
+            <span class="placeholder-icon">📦</span>
+          </div>
+          <mat-card-content>
+            <span class="product-category">{{ product.categoryName }}</span>
+            <h3 class="product-name">{{ product.name }}</h3>
+            @if (product.brand) {
+              <span class="product-brand">{{ product.brand }}</span>
+            }
+            <p class="product-price">
+              {{ product.priceAmount | currency:product.priceCurrency }}
+            </p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    @if (products.length === 0) {
+      <div class="no-products">
+        <p>No products found.</p>
+      </div>
+    }
+  }
+</div>

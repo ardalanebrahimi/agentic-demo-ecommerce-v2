@@ -1,0 +1,46 @@
+<div class="product-detail-container">
+  <a mat-button routerLink="/shop" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Products
+  </a>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-message">
+      {{ error }}
+    </div>
+  }
+
+  @if (!loading && !error && product) {
+    <div class="product-detail">
+      <div class="product-image-placeholder">
+        <span class="placeholder-icon">📦</span>
+      </div>
+
+      <div class="product-info">
+        <span class="product-category">{{ product.categoryName }}</span>
+        <h1 class="product-name">{{ product.name }}</h1>
+        
+        @if (product.brand) {
+          <p class="product-brand">by {{ product.brand }}</p>
+        }
+
+        <p class="product-price">
+          {{ product.priceAmount | currency:product.priceCurrency }}
+        </p>
+
+        @if (product.shortDescription) {
+          <div class="product-description">
+            <h3>Description</h3>
+            <p>{{ product.shortDescription }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
