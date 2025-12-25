@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-api.azurewebsites.net'
+  apiUrl: 'https://agentic-demo-ecommerce-api.yellowpebble-3d028e02.westeurope.azurecontainerapps.io'
 };
