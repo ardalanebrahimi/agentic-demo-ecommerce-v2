@@ -48,7 +48,16 @@ app.MapScalarApiReference();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in non-containerized environments
+// Container Apps handles HTTPS at the ingress level
+if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONTAINER_APP_NAME")))
+{
+    // Skip HTTPS redirection in Container Apps
+}
+else
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors();
 
 // Map Catalog endpoints

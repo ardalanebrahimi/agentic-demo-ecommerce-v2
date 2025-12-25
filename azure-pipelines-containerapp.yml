@@ -1,0 +1,81 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - backend/**
+      - azure-pipelines-containerapp.yml
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  azureSubscription: 'AzureSubscription1'
+  resourceGroup: 'ardiland'
+  containerAppName: 'agentic-demo-ecommerce-api'
+  containerAppEnv: 'agentic-demo-env'
+  location: 'westeurope'
+  dotnetVersion: '9.0.x'
+  workingDirectory: 'backend'
+
+stages:
+  - stage: Build
+    displayName: 'Build'
+    jobs:
+      - job: Build
+        displayName: 'Build Backend'
+        steps:
+          - task: UseDotNet@2
+            displayName: 'Setup .NET SDK'
+            inputs:
+              packageType: 'sdk'
+              version: '$(dotnetVersion)'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Publish'
+            inputs:
+              command: 'publish'
+              projects: '$(workingDirectory)/src/Host/WebApi/WebApi.csproj'
+              arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
+              publishWebProjects: false
+              zipAfterPublish: false
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/publish'
+              ArtifactName: 'backend'
+              publishLocation: 'Container'
+
+  - stage: Deploy
+    displayName: 'Deploy to Azure Container Apps'
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment: Deploy
+        displayName: 'Deploy Backend'
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  displayName: 'Deploy to Container App'
+                  inputs:
+                    azureSubscription: '$(azureSubscription)'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      # Install Container Apps extension
+                      az extension add --name containerapp --upgrade -y
+
+                      # Deploy using source code
+                      az containerapp up \
+                        --name $(containerAppName) \
+                        --resource-group $(resourceGroup) \
+                        --location $(location) \
+                        --environment $(containerAppEnv) \
+                        --source $(Pipeline.Workspace)/backend \
+                        --ingress external \
+                        --target-port 8080
