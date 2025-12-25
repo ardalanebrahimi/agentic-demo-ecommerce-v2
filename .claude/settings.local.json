@@ -15,7 +15,19 @@
       "Bash(git add:*)",
       "Bash(dotnet ef migrations add:*)",
       "Bash(ng generate:*)",
-      "Bash(dotnet dev-certs:*)"
+      "Bash(dotnet dev-certs:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git stash pop:*)",
+      "Bash(az containerapp show:*)",
+      "Bash(az containerapp update:*)",
+      "Bash(az containerapp logs show:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(dir:*)",
+      "Bash(git reset:*)"
     ]
   }
 }
