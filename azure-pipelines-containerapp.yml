@@ -77,11 +77,16 @@ stages:
                       ACR_USERNAME=$(az acr credential show --name $(containerRegistry) --query username -o tsv)
                       ACR_PASSWORD=$(az acr credential show --name $(containerRegistry) --query "passwords[0].value" -o tsv)
 
+                      # Configure registry credentials for the container app
+                      az containerapp registry set \
+                        --name $(containerAppName) \
+                        --resource-group $(resourceGroup) \
+                        --server ${ACR_SERVER} \
+                        --username ${ACR_USERNAME} \
+                        --password ${ACR_PASSWORD}
+
                       # Update container app with new image
                       az containerapp update \
                         --name $(containerAppName) \
                         --resource-group $(resourceGroup) \
-                        --image ${ACR_SERVER}/$(imageName):$(Build.BuildId) \
-                        --registry-server ${ACR_SERVER} \
-                        --registry-username ${ACR_USERNAME} \
-                        --registry-password ${ACR_PASSWORD}
+                        --image ${ACR_SERVER}/$(imageName):$(Build.BuildId)
