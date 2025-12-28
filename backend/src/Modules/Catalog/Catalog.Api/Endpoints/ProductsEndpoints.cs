@@ -1,4 +1,5 @@
 using Catalog.Application.DTOs;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,10 @@ public static class ProductsEndpoints
 
         group.MapGet("/{id:guid}", GetProductById)
             .WithName("GetProductById")
+            .WithOpenApi();
+
+        group.MapPost("/", CreateProduct)
+            .WithName("CreateProduct")
             .WithOpenApi();
 
         return app;
@@ -72,5 +77,41 @@ public static class ProductsEndpoints
         return product is null
             ? Results.NotFound()
             : Results.Ok(product);
+    }
+
+    private static async Task<IResult> CreateProduct(
+        CreateProductRequest request,
+        CatalogDbContext db)
+    {
+        var categoryExists = await db.Categories.AnyAsync(c => c.Id == request.CategoryId);
+        if (!categoryExists)
+        {
+            return Results.BadRequest(new { error = "Category not found" });
+        }
+
+        var product = Product.Create(
+            request.Name,
+            request.Brand,
+            request.PriceAmount,
+            request.PriceCurrency,
+            request.CategoryId,
+            request.ShortDescription);
+
+        db.Products.Add(product);
+        await db.SaveChangesAsync();
+
+        var category = await db.Categories.FindAsync(request.CategoryId);
+
+        var productDto = new ProductDto(
+            product.Id,
+            product.Name,
+            product.Brand,
+            product.PriceAmount,
+            product.PriceCurrency,
+            product.CategoryId,
+            category?.Name,
+            product.ShortDescription);
+
+        return Results.Created($"/api/products/{product.Id}", productDto);
     }
 }

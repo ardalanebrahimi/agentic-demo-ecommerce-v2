@@ -1,0 +1,46 @@
+<div class="header">
+  <h1>Products</h1>
+  <a mat-raised-button color="primary" routerLink="/admin/products/new">
+    <mat-icon>add</mat-icon>
+    Add Product
+  </a>
+</div>
+
+@if (loading) {
+  <div class="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+} @else {
+  <table mat-table [dataSource]="products" class="mat-elevation-z2">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="brand">
+      <th mat-header-cell *matHeaderCellDef>Brand</th>
+      <td mat-cell *matCellDef="let product">{{ product.brand || '-' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef>Category</th>
+      <td mat-cell *matCellDef="let product">{{ product.categoryName || '-' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef>Price</th>
+      <td mat-cell *matCellDef="let product">
+        {{ product.priceAmount | currency:product.priceCurrency }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  @if (products.length === 0) {
+    <div class="empty-state">
+      <p>No products found. Create your first product!</p>
+    </div>
+  }
+}

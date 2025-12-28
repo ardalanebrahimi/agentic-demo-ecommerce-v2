@@ -1,0 +1,41 @@
+h1 {
+  margin-bottom: 24px;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.price-row {
+  display: flex;
+  gap: 16px;
+
+  .price-amount {
+    flex: 2;
+  }
+
+  .price-currency {
+    flex: 1;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 16px;
+
+  button {
+    min-width: 120px;
+  }
+}
+
+mat-spinner {
+  display: inline-block;
+}

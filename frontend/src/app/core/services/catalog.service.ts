@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Category, Product } from '../models';
+import { Category, Product, CreateProductRequest } from '../models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -24,5 +24,9 @@ export class CatalogService {
 
   getProduct(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/api/products/${id}`);
+  }
+
+  createProduct(request: CreateProductRequest): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}/api/products`, request);
   }
 }
