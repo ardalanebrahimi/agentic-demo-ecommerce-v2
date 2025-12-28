@@ -1,71 +1,75 @@
-<h1>Create Product</h1>
+<div class="form-card">
+  <h2 class="form-title">Add Product</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" placeholder="Product name">
-    @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
-      <mat-error>Name is required</mat-error>
-    }
-    @if (form.get('name')?.hasError('maxlength')) {
-      <mat-error>Name must be 200 characters or less</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Brand</mat-label>
-    <input matInput formControlName="brand" placeholder="Brand (optional)">
-  </mat-form-field>
-
-  <div class="price-row">
-    <mat-form-field appearance="outline" class="price-amount">
-      <mat-label>Price</mat-label>
-      <input matInput type="number" formControlName="priceAmount" placeholder="0.00" step="0.01">
-      @if (form.get('priceAmount')?.hasError('required') && form.get('priceAmount')?.touched) {
-        <mat-error>Price is required</mat-error>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Product name">
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>Name is required</mat-error>
       }
-      @if (form.get('priceAmount')?.hasError('min')) {
-        <mat-error>Price must be greater than 0</mat-error>
+      @if (form.get('name')?.hasError('maxlength')) {
+        <mat-error>Name must be 200 characters or less</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="price-currency">
-      <mat-label>Currency</mat-label>
-      <input matInput formControlName="priceCurrency" placeholder="USD" maxlength="3">
-      @if (form.get('priceCurrency')?.hasError('required') && form.get('priceCurrency')?.touched) {
-        <mat-error>Required</mat-error>
+    <mat-form-field appearance="outline">
+      <mat-label>Brand</mat-label>
+      <input matInput formControlName="brand" placeholder="Brand (optional)">
+    </mat-form-field>
+
+    <div class="price-row">
+      <mat-form-field appearance="outline" class="price-amount">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="priceAmount" placeholder="0.00" step="0.01">
+        @if (form.get('priceAmount')?.hasError('required') && form.get('priceAmount')?.touched) {
+          <mat-error>Price is required</mat-error>
+        }
+        @if (form.get('priceAmount')?.hasError('min')) {
+          <mat-error>Price must be greater than 0</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="price-currency">
+        <mat-label>Currency</mat-label>
+        <input matInput formControlName="priceCurrency" placeholder="USD" maxlength="3">
+        @if (form.get('priceCurrency')?.hasError('required') && form.get('priceCurrency')?.touched) {
+          <mat-error>Required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="categoryId">
+        @for (category of categories; track category.id) {
+          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+        }
+      </mat-select>
+      @if (form.get('categoryId')?.hasError('required') && form.get('categoryId')?.touched) {
+        <mat-error>Category is required</mat-error>
       }
     </mat-form-field>
-  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Category</mat-label>
-    <mat-select formControlName="categoryId">
-      @for (category of categories; track category.id) {
-        <mat-option [value]="category.id">{{ category.name }}</mat-option>
+    <mat-form-field appearance="outline">
+      <mat-label>Short Description</mat-label>
+      <textarea matInput formControlName="shortDescription" placeholder="Brief product description (optional)" rows="3"></textarea>
+      @if (form.get('shortDescription')?.hasError('maxlength')) {
+        <mat-error>Description must be 500 characters or less</mat-error>
       }
-    </mat-select>
-    @if (form.get('categoryId')?.hasError('required') && form.get('categoryId')?.touched) {
-      <mat-error>Category is required</mat-error>
-    }
-  </mat-form-field>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Short Description</mat-label>
-    <textarea matInput formControlName="shortDescription" placeholder="Brief product description (optional)" rows="3"></textarea>
-    @if (form.get('shortDescription')?.hasError('maxlength')) {
-      <mat-error>Description must be 500 characters or less</mat-error>
-    }
-  </mat-form-field>
-
-  <div class="actions">
-    <button mat-button type="button" (click)="onCancel()" [disabled]="loading">Cancel</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="loading || loadingCategories">
-      @if (loading) {
-        <mat-spinner diameter="20"></mat-spinner>
-      } @else {
-        Create Product
-      }
-    </button>
-  </div>
-</form>
+    <div class="actions">
+      <button type="button" class="cancel-button" (click)="onCancel()" [disabled]="loading">
+        Cancel
+      </button>
+      <button type="submit" class="submit-button" [disabled]="loading || loadingCategories">
+        @if (loading) {
+          <mat-spinner diameter="18"></mat-spinner>
+        } @else {
+          Add Product
+        }
+      </button>
+    </div>
+  </form>
+</div>
