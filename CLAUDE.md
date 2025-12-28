@@ -130,22 +130,102 @@ npm run build      # Production build
 - **Database**: Azure PostgreSQL Flexible Server
 - **CI/CD**: GitHub Actions
 
-## Required Agents (Use in Every Session)
+## Multi-Agent Development Workflow
 
-**IMPORTANT**: The following agents MUST be used during development:
+This project uses a coordinated multi-agent system for development. The workflow ensures quality, consistency, and proper integration across frontend and backend.
 
-### Code Reviewer Agent
-**When**: After writing or modifying any code (features, bug fixes, refactoring)
-**Purpose**: Review code for quality, correctness, and adherence to project standards
-**Usage**: Invoke automatically after completing any logical chunk of code
+### Agent Overview
 
-### Implementation Documenter Agent
-**When**: After completing a feature, module, or significant code change
-**Purpose**: Create or update documentation (README files, API docs, code comments, architectural decision records)
-**Usage**: Invoke after implementation is finalized and code review is complete
+| Agent | Role | Invocation |
+|-------|------|------------|
+| **architect** | Validates code against ARD, enforces Clean Architecture | After code changes |
+| **frontend-expert** | Implements Angular features, follows prototype style | For UI tasks |
+| **backend-expert** | Implements .NET APIs, follows DDD patterns | For API tasks |
+| **moderator** | Synthesizes work, resolves conflicts, routes feedback | After parallel work |
+| **quality-tester** | Runs tests, linting, build checks | Before code review |
+| **code-reviewer** | Reviews code quality and correctness | After QA passes |
+| **implementation-documenter** | Creates/updates documentation | After review passes |
 
-### Workflow
-1. Implement the feature/fix
-2. Run the **code-reviewer** agent to verify quality and correctness
-3. Address any issues found by the reviewer
-4. Run the **implementation-documenter** agent to create/update documentation
+### Workflow Phases
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    PHASE 1: PARALLEL DEVELOPMENT                │
+├─────────────────────────────────────────────────────────────────┤
+│  Source of Truth: PRD + ARD + Prototype                        │
+│                                                                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│  │  Architect   │  │   Frontend   │  │   Backend    │         │
+│  │    Agent     │  │    Expert    │  │    Expert    │         │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘         │
+│         │                 │                 │                  │
+│         ▼                 ▼                 ▼                  │
+│    architect.md      frontend.md      backend.md               │
+│                                                                 │
+│              └──────────────┴──────────────┘                   │
+│                            │                                    │
+│                   .agents/state/ (File-Based Sync Hub)         │
+└─────────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    PHASE 2: INTEGRATION                         │
+├─────────────────────────────────────────────────────────────────┤
+│                    ┌──────────────┐                            │
+│                    │  Moderator   │◄── Reads all state files   │
+│                    │    Agent     │                            │
+│                    └──────┬───────┘                            │
+│                           │                                     │
+│            ┌──────────────┼──────────────┐                     │
+│            ▼              ▼              ▼                     │
+│     Feedback to    Feedback to    Conflict                     │
+│     Frontend       Backend        Resolution                   │
+│                           │                                     │
+│                    ┌──────▼───────┐                            │
+│                    │   Quality    │                            │
+│                    │   Tester     │                            │
+│                    └──────┬───────┘                            │
+│                           │                                     │
+│                    ┌──────▼───────┐                            │
+│                    │    Code      │                            │
+│                    │   Reviewer   │                            │
+│                    └──────┬───────┘                            │
+│                           │                                     │
+│                    ┌──────▼───────┐                            │
+│                    │ Documenter   │                            │
+│                    └──────────────┘                            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### State Files (Local Only - Gitignored)
+
+```
+.agents/
+└── state/
+    ├── architect.md    # Architecture validation logs
+    ├── frontend.md     # Frontend implementation progress
+    ├── backend.md      # Backend implementation progress
+    └── sync-status.md  # Integration status (Moderator maintains)
+```
+
+### When to Use Each Agent
+
+1. **Starting a Feature**:
+   - Use `/implement` or `/episode` slash command
+   - Agents will be orchestrated automatically
+
+2. **Manual Invocation**:
+   - `frontend-expert` - Angular component work
+   - `backend-expert` - .NET API work
+   - `architect` - Validate architecture compliance
+   - `moderator` - Synthesize parallel work
+   - `quality-tester` - Run all tests
+   - `code-reviewer` - Final code review
+   - `implementation-documenter` - Create documentation
+
+### Key Behaviors
+
+- **Moderator loops feedback** to expert agents (not to user)
+- **State files** track progress and enable coordination
+- **Architect validates** all changes against ARD
+- **Quality gates** must pass before code review

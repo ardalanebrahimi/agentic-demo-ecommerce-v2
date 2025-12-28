@@ -64,3 +64,8 @@ Thumbs.db
 # ================================
 *.log
 backend/src/Host/WebApi/appsettings.Development.json
+
+# ================================
+# AI Agent State (local only)
+# ================================
+.agents/
