@@ -25,7 +25,8 @@ public static class ProductsEndpoints
 
         group.MapPost("/", CreateProduct)
             .WithName("CreateProduct")
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization();
 
         return app;
     }

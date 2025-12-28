@@ -77,9 +77,9 @@
           <span>Estimated Total</span>
           <span>{{ cartService.subtotal() | currency:'USD' }}</span>
         </div>
-        <button class="checkout-btn">
+        <a routerLink="/checkout" class="checkout-btn">
           Proceed to Checkout
-        </button>
+        </a>
         <p class="checkout-note">Taxes calculated at checkout</p>
       </div>
     </div>

@@ -1,0 +1,159 @@
+<div class="order-detail-container">
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading order details...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h2>Something went wrong</h2>
+      <p>{{ error() }}</p>
+      <a routerLink="/admin/orders" class="btn-primary">Back to Orders</a>
+    </div>
+  } @else if (order()) {
+    <!-- Header -->
+    <div class="detail-header">
+      <div class="header-left">
+        <a routerLink="/admin/orders" class="back-link">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Back to Orders</span>
+        </a>
+        <h1>Order {{ order()!.orderNumber }}</h1>
+        <p class="order-date">Placed on {{ order()!.createdAt | date:'medium' }}</p>
+      </div>
+      <div class="header-right">
+        <span class="status-badge" [class]="getStatusClass(order()!.status)">
+          {{ order()!.status }}
+        </span>
+      </div>
+    </div>
+
+    <div class="detail-content">
+      <div class="detail-main">
+        <!-- Status Actions -->
+        <div class="card status-card">
+          <h2>Update Status</h2>
+          <div class="status-actions">
+            @for (option of statusOptions; track option.value) {
+              <button
+                class="status-btn"
+                [class.active]="order()!.status === option.value"
+                [class.available]="canTransitionTo(option.value)"
+                [disabled]="order()!.status === option.value || !canTransitionTo(option.value) || updating()"
+                (click)="updateStatus(option.value)">
+                <mat-icon>{{ option.icon }}</mat-icon>
+                <span>{{ option.label }}</span>
+              </button>
+            }
+          </div>
+          @if (updating()) {
+            <div class="updating-indicator">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Updating status...</span>
+            </div>
+          }
+        </div>
+
+        <!-- Shipping Information -->
+        <div class="card">
+          <h2>
+            <mat-icon>local_shipping</mat-icon>
+            Shipping Information
+          </h2>
+          <div class="info-grid">
+            <div class="info-block">
+              <h3>Recipient</h3>
+              <p class="name">{{ order()!.shippingAddress.firstName }} {{ order()!.shippingAddress.lastName }}</p>
+              <p>{{ order()!.shippingAddress.address }}</p>
+              <p>{{ order()!.shippingAddress.city }}, {{ order()!.shippingAddress.state }} {{ order()!.shippingAddress.zipCode }}</p>
+            </div>
+            <div class="info-block">
+              <h3>Contact</h3>
+              <p>{{ order()!.shippingAddress.phone }}</p>
+              @if (order()!.customerEmail) {
+                <p>{{ order()!.customerEmail }}</p>
+              }
+            </div>
+            <div class="info-block">
+              <h3>Shipping Method</h3>
+              <p>{{ order()!.shippingMethod }}</p>
+              <p class="shipping-cost">{{ order()!.shippingCost === 0 ? 'Free' : '$' + order()!.shippingCost.toFixed(2) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="card">
+          <h2>
+            <mat-icon>shopping_bag</mat-icon>
+            Order Items ({{ order()!.items.length }})
+          </h2>
+          <div class="items-table">
+            <div class="items-header">
+              <div class="col-product">Product</div>
+              <div class="col-price">Unit Price</div>
+              <div class="col-qty">Qty</div>
+              <div class="col-total">Total</div>
+            </div>
+            <div class="items-body">
+              @for (item of order()!.items; track item.productId) {
+                <div class="item-row">
+                  <div class="col-product">
+                    <div class="product-icon">
+                      <mat-icon>inventory_2</mat-icon>
+                    </div>
+                    <span class="product-name">{{ item.productName }}</span>
+                  </div>
+                  <div class="col-price">${{ item.unitPrice.toFixed(2) }}</div>
+                  <div class="col-qty">{{ item.quantity }}</div>
+                  <div class="col-total">${{ item.lineTotal.toFixed(2) }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="order-summary card">
+        <h3>Order Summary</h3>
+        <div class="summary-lines">
+          <div class="summary-line">
+            <span class="label">Subtotal</span>
+            <span class="value">${{ order()!.subtotal.toFixed(2) }}</span>
+          </div>
+          <div class="summary-line">
+            <span class="label">Shipping</span>
+            <span class="value">{{ order()!.shippingCost === 0 ? 'Free' : '$' + order()!.shippingCost.toFixed(2) }}</span>
+          </div>
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span>${{ order()!.total.toFixed(2) }}</span>
+        </div>
+
+        <div class="order-meta">
+          <div class="meta-item">
+            <span class="meta-label">Order ID</span>
+            <span class="meta-value">{{ order()!.id }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Order Number</span>
+            <span class="meta-value">{{ order()!.orderNumber }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Created</span>
+            <span class="meta-value">{{ order()!.createdAt | date:'medium' }}</span>
+          </div>
+          @if (order()!.updatedAt) {
+            <div class="meta-item">
+              <span class="meta-label">Last Updated</span>
+              <span class="meta-value">{{ order()!.updatedAt | date:'medium' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

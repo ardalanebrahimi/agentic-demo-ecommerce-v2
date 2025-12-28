@@ -1,0 +1,70 @@
+<div class="orders-card">
+  <div class="card-header">
+    <h3 class="card-title">Orders ({{ orders.length }})</h3>
+    <div class="header-actions">
+      <div class="filter-tabs">
+        @for (filter of filters; track filter.value) {
+          <button
+            class="filter-tab"
+            [class.active]="activeFilter === filter.value"
+            (click)="loadOrders(filter.value === 'all' ? undefined : filter.value)">
+            {{ filter.label }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (orders.length === 0) {
+    <div class="empty-state">
+      <mat-icon>receipt_long</mat-icon>
+      <p>No orders found</p>
+    </div>
+  } @else {
+    <div class="orders-table">
+      <div class="table-header">
+        <div class="col-order">Order</div>
+        <div class="col-customer">Customer</div>
+        <div class="col-items">Items</div>
+        <div class="col-total">Total</div>
+        <div class="col-status">Status</div>
+        <div class="col-date">Date</div>
+        <div class="col-actions"></div>
+      </div>
+      <div class="table-body">
+        @for (order of orders; track order.id) {
+          <a [routerLink]="['/admin/orders', order.id]" class="order-row">
+            <div class="col-order">
+              <span class="order-number">{{ order.orderNumber }}</span>
+            </div>
+            <div class="col-customer">
+              <span class="customer-name">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</span>
+              <span class="customer-city">{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }}</span>
+            </div>
+            <div class="col-items">
+              <span class="items-count">{{ order.items.length }} item{{ order.items.length !== 1 ? 's' : '' }}</span>
+            </div>
+            <div class="col-total">
+              <span class="total-amount">${{ order.total.toFixed(2) }}</span>
+            </div>
+            <div class="col-status">
+              <span class="status-badge" [class]="getStatusClass(order.status)">
+                {{ order.status }}
+              </span>
+            </div>
+            <div class="col-date">
+              <span class="date">{{ order.createdAt | date:'shortDate' }}</span>
+            </div>
+            <div class="col-actions">
+              <mat-icon class="arrow-icon">chevron_right</mat-icon>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+  }
+</div>

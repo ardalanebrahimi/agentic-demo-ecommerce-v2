@@ -1,0 +1,405 @@
+.confirmation-container {
+  min-height: 100vh;
+  background-color: #fafafa;
+  padding-bottom: 48px;
+}
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px;
+  text-align: center;
+
+  p {
+    color: #737373;
+    margin-top: 16px;
+  }
+}
+
+.error-state {
+  .error-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #ef4444;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #171717;
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin-bottom: 24px;
+  }
+}
+
+.success-header {
+  text-align: center;
+  padding: 48px 24px 32px;
+  background: white;
+  border-bottom: 1px solid #f5f5f5;
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: #dcfce7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: #10b981;
+    }
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #171717;
+    margin: 0 0 8px;
+  }
+
+  .order-number {
+    font-size: 16px;
+    font-weight: 500;
+    color: #525252;
+    margin: 0 0 8px;
+  }
+
+  .thank-you {
+    font-size: 14px;
+    color: #737373;
+    margin: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+.confirmation-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.confirmation-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background: white;
+  border: 1px solid #f5f5f5;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #171717;
+    margin: 0;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: #737373;
+    }
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &.status-processing {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  &.status-shipped {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+
+  &.status-delivered {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  &.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+.order-timeline {
+  position: relative;
+  padding-left: 24px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: #e5e5e5;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 20px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    border: 3px solid white;
+    z-index: 1;
+  }
+
+  .timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .timeline-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #a3a3a3;
+  }
+
+  .timeline-date {
+    font-size: 12px;
+    color: #a3a3a3;
+  }
+
+  &.active {
+    .timeline-dot {
+      background: #10b981;
+    }
+
+    .timeline-label {
+      color: #171717;
+    }
+
+    .timeline-date {
+      color: #525252;
+    }
+  }
+
+  &.complete {
+    .timeline-dot {
+      background: #10b981;
+    }
+  }
+}
+
+.shipping-details {
+  margin-bottom: 16px;
+
+  .name {
+    font-weight: 500;
+    color: #171717;
+  }
+
+  p {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: #525252;
+  }
+}
+
+.shipping-method {
+  padding-top: 16px;
+  border-top: 1px solid #f5f5f5;
+
+  .method-label {
+    font-size: 14px;
+    color: #737373;
+    margin-right: 8px;
+  }
+
+  .method-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #171717;
+  }
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 12px;
+
+  .item-image {
+    width: 48px;
+    height: 48px;
+    background: #e5e5e5;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      color: #737373;
+      font-size: 24px;
+    }
+  }
+
+  .item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .item-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #171717;
+    }
+
+    .item-meta {
+      font-size: 12px;
+      color: #737373;
+    }
+  }
+
+  .item-total {
+    font-size: 14px;
+    font-weight: 600;
+    color: #171717;
+  }
+}
+
+.order-summary {
+  position: sticky;
+  top: 24px;
+  height: fit-content;
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #171717;
+    margin: 0 0 16px;
+  }
+}
+
+.summary-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+
+  .label {
+    color: #737373;
+  }
+
+  .value {
+    color: #171717;
+  }
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 600;
+  color: #171717;
+  padding-top: 16px;
+  border-top: 1px solid #f5f5f5;
+}
+
+.summary-actions {
+  margin-top: 24px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #171717;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #262626;
+  }
+}
+
+.full-width {
+  width: 100%;
+}

@@ -1,0 +1,234 @@
+<div class="checkout-container">
+  <!-- Header -->
+  <header class="checkout-header">
+    <a routerLink="/cart" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Cart</span>
+    </a>
+    <h1>Checkout</h1>
+  </header>
+
+  <!-- Empty Cart State -->
+  @if (isCartEmpty) {
+    <div class="empty-state">
+      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <h2>Your cart is empty</h2>
+      <p>Add some items to your cart before checking out</p>
+      <a routerLink="/shop" class="btn-primary">Continue Shopping</a>
+    </div>
+  } @else {
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+      <div class="step" [class.active]="currentStep === 1" [class.complete]="currentStep > 1">
+        <div class="step-circle">
+          @if (currentStep > 1) {
+            <mat-icon>check</mat-icon>
+          } @else {
+            <mat-icon>local_shipping</mat-icon>
+          }
+        </div>
+        <span class="step-label">Shipping</span>
+      </div>
+      <div class="step-line" [class.complete]="currentStep > 1"></div>
+      <div class="step" [class.active]="currentStep === 2">
+        <div class="step-circle">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <span class="step-label">Review</span>
+      </div>
+    </div>
+
+    <div class="checkout-content">
+      <!-- Main Content -->
+      <div class="checkout-main">
+        <!-- Step 1: Shipping -->
+        @if (currentStep === 1) {
+          <div class="card shipping-section">
+            <h2>Shipping Information</h2>
+            <form [formGroup]="shippingForm" class="shipping-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="firstName" />
+                  @if (shippingForm.get('firstName')?.hasError('required') && shippingForm.get('firstName')?.touched) {
+                    <mat-error>First name is required</mat-error>
+                  }
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="lastName" />
+                  @if (shippingForm.get('lastName')?.hasError('required') && shippingForm.get('lastName')?.touched) {
+                    <mat-error>Last name is required</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Address</mat-label>
+                <input matInput formControlName="address" />
+                @if (shippingForm.get('address')?.hasError('required') && shippingForm.get('address')?.touched) {
+                  <mat-error>Address is required</mat-error>
+                }
+              </mat-form-field>
+
+              <div class="form-row form-row-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <input matInput formControlName="city" />
+                  @if (shippingForm.get('city')?.hasError('required') && shippingForm.get('city')?.touched) {
+                    <mat-error>City is required</mat-error>
+                  }
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>State</mat-label>
+                  <input matInput formControlName="state" />
+                  @if (shippingForm.get('state')?.hasError('required') && shippingForm.get('state')?.touched) {
+                    <mat-error>State is required</mat-error>
+                  }
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>ZIP Code</mat-label>
+                  <input matInput formControlName="zipCode" />
+                  @if (shippingForm.get('zipCode')?.hasError('required') && shippingForm.get('zipCode')?.touched) {
+                    <mat-error>ZIP code is required</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Phone</mat-label>
+                <input matInput formControlName="phone" type="tel" />
+                @if (shippingForm.get('phone')?.hasError('required') && shippingForm.get('phone')?.touched) {
+                  <mat-error>Phone is required</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email (optional)</mat-label>
+                <input matInput formControlName="email" type="email" />
+                @if (shippingForm.get('email')?.hasError('email') && shippingForm.get('email')?.touched) {
+                  <mat-error>Invalid email address</mat-error>
+                }
+              </mat-form-field>
+            </form>
+
+            <div class="shipping-method-section">
+              <h3>Shipping Method</h3>
+              <mat-radio-group [(ngModel)]="shippingMethod" class="shipping-options">
+                <label class="shipping-option" [class.selected]="shippingMethod === 'Standard'">
+                  <mat-radio-button value="Standard"></mat-radio-button>
+                  <div class="option-details">
+                    <span class="option-name">Standard (5-7 days)</span>
+                  </div>
+                  <span class="option-price">{{ subtotal() >= 100 ? 'Free' : '$9.99' }}</span>
+                </label>
+                <label class="shipping-option" [class.selected]="shippingMethod === 'Express'">
+                  <mat-radio-button value="Express"></mat-radio-button>
+                  <div class="option-details">
+                    <span class="option-name">Express (2-3 days)</span>
+                  </div>
+                  <span class="option-price">$14.99</span>
+                </label>
+              </mat-radio-group>
+            </div>
+
+            <button class="btn-primary btn-lg full-width" (click)="continueToReview()" [disabled]="shippingForm.invalid">
+              Continue to Review
+            </button>
+          </div>
+        }
+
+        <!-- Step 2: Review -->
+        @if (currentStep === 2) {
+          <div class="card review-section">
+            <h2>Review Order</h2>
+
+            <div class="review-block">
+              <div class="review-header">
+                <h3>
+                  <mat-icon>local_shipping</mat-icon>
+                  Shipping
+                </h3>
+                <button class="edit-link" (click)="backToShipping()">Edit</button>
+              </div>
+              <div class="review-content">
+                <p>{{ shippingForm.value.firstName }} {{ shippingForm.value.lastName }}</p>
+                <p>{{ shippingForm.value.address }}</p>
+                <p>{{ shippingForm.value.city }}, {{ shippingForm.value.state }} {{ shippingForm.value.zipCode }}</p>
+                <p>{{ shippingForm.value.phone }}</p>
+                @if (shippingForm.value.email) {
+                  <p>{{ shippingForm.value.email }}</p>
+                }
+              </div>
+            </div>
+
+            <div class="review-block">
+              <div class="review-header">
+                <h3>
+                  <mat-icon>inventory_2</mat-icon>
+                  Shipping Method
+                </h3>
+              </div>
+              <div class="review-content">
+                <p>{{ shippingMethod }} - {{ shippingCost === 0 ? 'Free' : ('$' + shippingCost.toFixed(2)) }}</p>
+              </div>
+            </div>
+
+            <div class="review-block">
+              <div class="review-header">
+                <h3>
+                  <mat-icon>shopping_bag</mat-icon>
+                  Items ({{ cartItems().length }})
+                </h3>
+              </div>
+              <div class="order-items">
+                @for (item of cartItems(); track item.product.id) {
+                  <div class="order-item">
+                    <div class="item-image">
+                      <mat-icon>inventory_2</mat-icon>
+                    </div>
+                    <div class="item-details">
+                      <span class="item-name">{{ item.product.name }}</span>
+                      <span class="item-qty">Qty: {{ item.quantity }}</span>
+                    </div>
+                    <span class="item-price">${{ (item.product.priceAmount * item.quantity).toFixed(2) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <button class="btn-secondary" (click)="backToShipping()">Back</button>
+              <button class="btn-primary btn-lg" (click)="placeOrder()" [disabled]="loading">
+                @if (loading) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                } @else {
+                  Place Order - ${{ total.toFixed(2) }}
+                }
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="order-summary card">
+        <h3>Order Summary</h3>
+        <div class="summary-lines">
+          <div class="summary-line">
+            <span class="label">Subtotal</span>
+            <span class="value">${{ subtotal().toFixed(2) }}</span>
+          </div>
+          <div class="summary-line">
+            <span class="label">Shipping</span>
+            <span class="value">{{ shippingCost === 0 ? 'Free' : ('$' + shippingCost.toFixed(2)) }}</span>
+          </div>
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span>${{ total.toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

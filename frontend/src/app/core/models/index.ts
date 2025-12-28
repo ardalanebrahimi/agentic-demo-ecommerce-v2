@@ -2,3 +2,8 @@ export * from './category.model';
 export * from './product.model';
 export * from './create-product-request.model';
 export * from './cart.model';
+export * from './auth.model';
+export * from './shipping-address.model';
+export * from './order-item.model';
+export * from './order.model';
+export * from './create-order-request.model';

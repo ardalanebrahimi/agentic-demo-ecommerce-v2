@@ -37,6 +37,7 @@ cd backend
 # Then run:
 dotnet build
 dotnet run --project src/Host/WebApi
+dotnet run --project src/Host/WebApi --launch-profile https
 ```
 
 The API will be available at `https://localhost:7001`
@@ -54,6 +55,7 @@ The app will be available at `http://localhost:4200`
 ## API Documentation
 
 Once the backend is running:
+
 - **Scalar UI**: https://localhost:7001/scalar/v1
 - **OpenAPI Spec**: https://localhost:7001/openapi/v1.json
 
@@ -75,6 +77,7 @@ The backend follows **Clean Architecture** with a **Modular Monolith** approach:
 ## Documentation
 
 See the `/docs` folder for:
+
 - Product Requirements Document (PRD)
 - Architecture Requirements Document (ARD)
 - Execution Plan

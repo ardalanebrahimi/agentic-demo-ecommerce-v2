@@ -17,6 +17,7 @@ This is an episode-based e-commerce demo showcasing agentic coding. The project 
 ## Architecture
 
 ### Backend (.NET 9)
+
 - **Clean Architecture** with module boundaries
 - **Modular Monolith** pattern (one module per bounded context)
 - EF Core with PostgreSQL
@@ -36,6 +37,7 @@ backend/src/
 ```
 
 ### Frontend (Angular 19)
+
 - Standalone components
 - Angular Material UI
 - Hash-based routing (for GitHub Pages)
@@ -44,6 +46,7 @@ backend/src/
 ## Key Conventions
 
 ### Backend
+
 - Use **minimal APIs** (not controllers)
 - DTOs in Application layer, entities in Domain
 - DbContext and migrations in Infrastructure
@@ -51,6 +54,7 @@ backend/src/
 - Connection strings from configuration/environment
 
 ### Frontend
+
 - **Standalone components** only
 - Lazy-loaded routes
 - Services in `core/services/`
@@ -60,6 +64,7 @@ backend/src/
 ## Episode Scope (Current: Episode 1)
 
 Episode 1 delivers:
+
 - Product catalog (read-only)
 - Categories and Products endpoints
 - Product list and detail pages
@@ -79,6 +84,7 @@ Episode 1 delivers:
 **IMPORTANT**: Always use `/docs/ecommerce-app.tsx` as the style reference for all new features.
 
 The prototype defines the visual language:
+
 - **Colors**: Neutral palette (neutral-900 for primary, neutral-100/50 for backgrounds)
 - **Typography**: Clean, semibold headings
 - **Borders**: Subtle borders (neutral-100, neutral-200), rounded corners (rounded-xl, rounded-2xl)
@@ -92,13 +98,16 @@ Recreate the design using **Angular Material** components while maintaining the 
 ## Development Commands
 
 ### Backend
+
 ```bash
 cd backend
 dotnet build
 dotnet run --project src/Host/WebApi
+dotnet run --project src/Host/WebApi --launch-profile https
 ```
 
 ### Frontend
+
 ```bash
 cd frontend
 npm install
@@ -115,11 +124,13 @@ npm run build      # Production build
 ## Configuration
 
 ### Backend (appsettings)
+
 - `ConnectionStrings:CatalogDb` - PostgreSQL connection
 - `AllowedOrigins` - CORS allowed origins array
 - `RUN_MIGRATIONS` - Enable/disable auto migrations (default: true)
 
 ### Frontend (environments)
+
 - `environment.ts` - Development config
 - `environment.prod.ts` - Production config (API URL)
 
@@ -136,15 +147,15 @@ This project uses a coordinated multi-agent system for development. The workflow
 
 ### Agent Overview
 
-| Agent | Role | Invocation |
-|-------|------|------------|
-| **architect** | Validates code against ARD, enforces Clean Architecture | After code changes |
-| **frontend-expert** | Implements Angular features, follows prototype style | For UI tasks |
-| **backend-expert** | Implements .NET APIs, follows DDD patterns | For API tasks |
-| **moderator** | Synthesizes work, resolves conflicts, routes feedback | After parallel work |
-| **quality-tester** | Runs tests, linting, build checks | Before code review |
-| **code-reviewer** | Reviews code quality and correctness | After QA passes |
-| **implementation-documenter** | Creates/updates documentation | After review passes |
+| Agent                         | Role                                                    | Invocation          |
+| ----------------------------- | ------------------------------------------------------- | ------------------- |
+| **architect**                 | Validates code against ARD, enforces Clean Architecture | After code changes  |
+| **frontend-expert**           | Implements Angular features, follows prototype style    | For UI tasks        |
+| **backend-expert**            | Implements .NET APIs, follows DDD patterns              | For API tasks       |
+| **moderator**                 | Synthesizes work, resolves conflicts, routes feedback   | After parallel work |
+| **quality-tester**            | Runs tests, linting, build checks                       | Before code review  |
+| **code-reviewer**             | Reviews code quality and correctness                    | After QA passes     |
+| **implementation-documenter** | Creates/updates documentation                           | After review passes |
 
 ### Workflow Phases
 
@@ -211,6 +222,7 @@ This project uses a coordinated multi-agent system for development. The workflow
 ### When to Use Each Agent
 
 1. **Starting a Feature**:
+
    - Use `/implement` or `/episode` slash command
    - Agents will be orchestrated automatically
 

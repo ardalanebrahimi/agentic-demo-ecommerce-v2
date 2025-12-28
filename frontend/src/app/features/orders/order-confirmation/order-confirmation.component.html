@@ -1,0 +1,132 @@
+<div class="confirmation-container">
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading order details...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h2>Something went wrong</h2>
+      <p>{{ error() }}</p>
+      <a routerLink="/shop" class="btn-primary">Continue Shopping</a>
+    </div>
+  } @else if (order()) {
+    <div class="success-header">
+      <div class="success-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <h1>Order Confirmed!</h1>
+      <p class="order-number">Order #{{ order()!.orderNumber }}</p>
+      <p class="thank-you">Thank you for your purchase. We'll send you updates about your order.</p>
+    </div>
+
+    <div class="confirmation-content">
+      <div class="confirmation-main">
+        <!-- Order Status -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Order Status</h2>
+            <span class="status-badge" [class]="getStatusClass(order()!.status)">
+              {{ order()!.status }}
+            </span>
+          </div>
+          <div class="order-timeline">
+            <div class="timeline-item" [class.active]="true" [class.complete]="order()!.status !== 'Pending'">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-label">Order Placed</span>
+                <span class="timeline-date">{{ order()!.createdAt | date:'medium' }}</span>
+              </div>
+            </div>
+            <div class="timeline-item" [class.active]="order()!.status === 'Processing' || order()!.status === 'Shipped' || order()!.status === 'Delivered'">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-label">Processing</span>
+              </div>
+            </div>
+            <div class="timeline-item" [class.active]="order()!.status === 'Shipped' || order()!.status === 'Delivered'">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-label">Shipped</span>
+              </div>
+            </div>
+            <div class="timeline-item" [class.active]="order()!.status === 'Delivered'">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-label">Delivered</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Information -->
+        <div class="card">
+          <div class="card-header">
+            <h2>
+              <mat-icon>local_shipping</mat-icon>
+              Shipping Information
+            </h2>
+          </div>
+          <div class="shipping-details">
+            <p class="name">{{ order()!.shippingAddress.firstName }} {{ order()!.shippingAddress.lastName }}</p>
+            <p>{{ order()!.shippingAddress.address }}</p>
+            <p>{{ order()!.shippingAddress.city }}, {{ order()!.shippingAddress.state }} {{ order()!.shippingAddress.zipCode }}</p>
+            <p>{{ order()!.shippingAddress.phone }}</p>
+          </div>
+          <div class="shipping-method">
+            <span class="method-label">Shipping Method:</span>
+            <span class="method-value">{{ order()!.shippingMethod }}</span>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="card">
+          <div class="card-header">
+            <h2>
+              <mat-icon>shopping_bag</mat-icon>
+              Order Items ({{ order()!.items.length }})
+            </h2>
+          </div>
+          <div class="order-items">
+            @for (item of order()!.items; track item.productId) {
+              <div class="order-item">
+                <div class="item-image">
+                  <mat-icon>inventory_2</mat-icon>
+                </div>
+                <div class="item-details">
+                  <span class="item-name">{{ item.productName }}</span>
+                  <span class="item-meta">Qty: {{ item.quantity }} × ${{ item.unitPrice.toFixed(2) }}</span>
+                </div>
+                <span class="item-total">${{ item.lineTotal.toFixed(2) }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="order-summary card">
+        <h3>Order Summary</h3>
+        <div class="summary-lines">
+          <div class="summary-line">
+            <span class="label">Subtotal</span>
+            <span class="value">${{ order()!.subtotal.toFixed(2) }}</span>
+          </div>
+          <div class="summary-line">
+            <span class="label">Shipping</span>
+            <span class="value">{{ order()!.shippingCost === 0 ? 'Free' : ('$' + order()!.shippingCost.toFixed(2)) }}</span>
+          </div>
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span>${{ order()!.total.toFixed(2) }}</span>
+        </div>
+
+        <div class="summary-actions">
+          <a routerLink="/shop" class="btn-primary full-width">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  }
+</div>
