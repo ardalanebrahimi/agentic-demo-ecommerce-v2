@@ -72,7 +72,22 @@ Episode 1 delivers:
 - `/docs/ecommerce-prd-V2.md` - Product requirements
 - `/docs/ecommerce-ARD.md` - Architecture decisions
 - `/docs/ecommerce-execution-plan.md` - Episode breakdown
-- `/docs/ecommerce-app.tsx` - Visual reference only (React prototype, do NOT copy code)
+- `/docs/ecommerce-app.tsx` - **Style reference** (React prototype)
+
+## UI Style Guide
+
+**IMPORTANT**: Always use `/docs/ecommerce-app.tsx` as the style reference for all new features.
+
+The prototype defines the visual language:
+- **Colors**: Neutral palette (neutral-900 for primary, neutral-100/50 for backgrounds)
+- **Typography**: Clean, semibold headings
+- **Borders**: Subtle borders (neutral-100, neutral-200), rounded corners (rounded-xl, rounded-2xl)
+- **Cards**: White background, subtle border, hover shadows
+- **Buttons**: Primary = neutral-900 (dark), Secondary = neutral-100 (light)
+- **Badges**: Contextual colors (emerald for success, amber for warning, red for error)
+- **Spacing**: Generous padding (p-4, p-5, p-6), consistent gaps
+
+Recreate the design using **Angular Material** components while maintaining the prototype's aesthetic.
 
 ## Development Commands
 
