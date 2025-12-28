@@ -129,3 +129,23 @@ npm run build      # Production build
 - **Backend**: Azure App Service
 - **Database**: Azure PostgreSQL Flexible Server
 - **CI/CD**: GitHub Actions
+
+## Required Agents (Use in Every Session)
+
+**IMPORTANT**: The following agents MUST be used during development:
+
+### Code Reviewer Agent
+**When**: After writing or modifying any code (features, bug fixes, refactoring)
+**Purpose**: Review code for quality, correctness, and adherence to project standards
+**Usage**: Invoke automatically after completing any logical chunk of code
+
+### Implementation Documenter Agent
+**When**: After completing a feature, module, or significant code change
+**Purpose**: Create or update documentation (README files, API docs, code comments, architectural decision records)
+**Usage**: Invoke after implementation is finalized and code review is complete
+
+### Workflow
+1. Implement the feature/fix
+2. Run the **code-reviewer** agent to verify quality and correctness
+3. Address any issues found by the reviewer
+4. Run the **implementation-documenter** agent to create/update documentation
