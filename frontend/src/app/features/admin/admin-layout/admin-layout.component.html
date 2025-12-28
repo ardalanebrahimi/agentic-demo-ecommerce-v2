@@ -2,10 +2,10 @@
   <header class="admin-header">
     <div class="header-content">
       <h1 class="title">Admin Dashboard</h1>
-      <a routerLink="/shop" class="exit-link">
+      <button class="logout-button" (click)="logout()">
         <mat-icon>logout</mat-icon>
-        <span>Exit</span>
-      </a>
+        <span>Logout</span>
+      </button>
     </div>
   </header>
 
@@ -13,6 +13,9 @@
     <nav class="tab-nav">
       <a routerLink="/admin/products" routerLinkActive="active" class="tab-link">
         Products
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="tab-link">
+        Orders
       </a>
     </nav>
 
