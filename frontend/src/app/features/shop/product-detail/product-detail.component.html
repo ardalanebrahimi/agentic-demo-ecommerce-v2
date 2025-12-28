@@ -1,9 +1,24 @@
-<div class="product-detail-container">
-  <a mat-button routerLink="/shop" class="back-link">
-    <mat-icon>arrow_back</mat-icon>
-    Back to Products
-  </a>
+<header class="shop-header">
+  <div class="header-content">
+    <a routerLink="/shop" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Store</span>
+    </a>
+    <div class="header-actions">
+      <a routerLink="/admin" class="admin-link">
+        <mat-icon>settings</mat-icon>
+      </a>
+      <button class="cart-button" (click)="openCart()">
+        <mat-icon>shopping_cart</mat-icon>
+        @if (cartService.itemCount() > 0) {
+          <span class="cart-badge">{{ cartService.itemCount() }}</span>
+        }
+      </button>
+    </div>
+  </div>
+</header>
 
+<div class="product-detail-container">
   @if (loading) {
     <div class="loading-container">
       <mat-spinner diameter="48"></mat-spinner>
@@ -25,7 +40,7 @@
       <div class="product-info">
         <span class="product-category">{{ product.categoryName }}</span>
         <h1 class="product-name">{{ product.name }}</h1>
-        
+
         @if (product.brand) {
           <p class="product-brand">by {{ product.brand }}</p>
         }
@@ -36,11 +51,28 @@
 
         @if (product.shortDescription) {
           <div class="product-description">
-            <h3>Description</h3>
             <p>{{ product.shortDescription }}</p>
           </div>
         }
+
+        <div class="add-to-cart-section">
+          <div class="quantity-selector">
+            <button class="qty-btn" (click)="decrementQuantity()" [disabled]="quantity <= 1">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="qty-value">{{ quantity }}</span>
+            <button class="qty-btn" (click)="incrementQuantity()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <button class="add-to-cart-btn" (click)="addToCart()">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   }
 </div>
+
+<app-slide-out-cart [open]="cartOpen" (closed)="closeCart()"></app-slide-out-cart>

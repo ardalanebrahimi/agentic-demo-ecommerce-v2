@@ -17,6 +17,11 @@ export const routes: Routes = [
       .then(m => m.ProductDetailComponent)
   },
   {
+    path: 'cart',
+    loadComponent: () => import('./features/cart/cart-page/cart-page.component')
+      .then(m => m.CartPageComponent)
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin-layout/admin-layout.component')
       .then(m => m.AdminLayoutComponent),

@@ -1,0 +1,87 @@
+<header class="cart-header">
+  <div class="header-content">
+    <a routerLink="/shop" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Continue Shopping</span>
+    </a>
+    <h1 class="page-title">Your Cart</h1>
+    <div class="header-spacer"></div>
+  </div>
+</header>
+
+<div class="cart-container">
+  @if (cartService.cartItems().length === 0) {
+    <div class="empty-cart">
+      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything to your cart yet.</p>
+      <a routerLink="/shop" class="continue-btn">
+        Browse Products
+      </a>
+    </div>
+  } @else {
+    <div class="cart-content">
+      <div class="cart-items">
+        <div class="cart-items-header">
+          <span class="items-count">{{ cartService.itemCount() }} item(s)</span>
+          <button class="clear-cart-btn" (click)="clearCart()">
+            Clear Cart
+          </button>
+        </div>
+
+        @for (item of cartService.cartItems(); track item.product.id) {
+          <div class="cart-item">
+            <div class="item-image">📦</div>
+            <div class="item-details">
+              <a [routerLink]="['/shop', item.product.id]" class="item-name">
+                {{ item.product.name }}
+              </a>
+              <span class="item-category">{{ item.product.categoryName }}</span>
+              <span class="item-price">
+                {{ item.product.priceAmount | currency:item.product.priceCurrency }}
+              </span>
+            </div>
+            <div class="item-quantity">
+              <div class="quantity-controls">
+                <button class="qty-btn" (click)="updateQuantity(item.product.id, -1)" [disabled]="item.quantity <= 1">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="updateQuantity(item.product.id, 1)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="item-total">
+              {{ item.product.priceAmount * item.quantity | currency:item.product.priceCurrency }}
+            </div>
+            <button class="remove-btn" (click)="removeItem(item.product.id)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ cartService.subtotal() | currency:'USD' }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="shipping-note">Calculated at checkout</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total">
+          <span>Estimated Total</span>
+          <span>{{ cartService.subtotal() | currency:'USD' }}</span>
+        </div>
+        <button class="checkout-btn">
+          Proceed to Checkout
+        </button>
+        <p class="checkout-note">Taxes calculated at checkout</p>
+      </div>
+    </div>
+  }
+</div>

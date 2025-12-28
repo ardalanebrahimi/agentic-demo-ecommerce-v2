@@ -1,6 +1,21 @@
-<div class="shop-container">
-  <h1>Products</h1>
+<header class="shop-header">
+  <div class="header-content">
+    <h1 class="shop-title">Store</h1>
+    <div class="header-actions">
+      <a routerLink="/admin" class="admin-link">
+        <mat-icon>settings</mat-icon>
+      </a>
+      <button class="cart-button" (click)="openCart()">
+        <mat-icon>shopping_cart</mat-icon>
+        @if (cartService.itemCount() > 0) {
+          <span class="cart-badge">{{ cartService.itemCount() }}</span>
+        }
+      </button>
+    </div>
+  </div>
+</header>
 
+<div class="shop-container">
   <mat-chip-listbox class="category-filters" aria-label="Category filter">
     <mat-chip-option
       [selected]="selectedCategoryId === null"
@@ -31,21 +46,23 @@
   @if (!loading && !error) {
     <div class="products-grid">
       @for (product of products; track product.id) {
-        <mat-card class="product-card" [routerLink]="['/shop', product.id]">
+        <div class="product-card" [routerLink]="['/shop', product.id]">
           <div class="product-image-placeholder">
             <span class="placeholder-icon">📦</span>
           </div>
-          <mat-card-content>
+          <div class="product-content">
             <span class="product-category">{{ product.categoryName }}</span>
             <h3 class="product-name">{{ product.name }}</h3>
-            @if (product.brand) {
-              <span class="product-brand">{{ product.brand }}</span>
-            }
-            <p class="product-price">
-              {{ product.priceAmount | currency:product.priceCurrency }}
-            </p>
-          </mat-card-content>
-        </mat-card>
+            <div class="product-footer">
+              <span class="product-price">
+                {{ product.priceAmount | currency:product.priceCurrency }}
+              </span>
+              <button class="add-to-cart-btn" (click)="addToCart($event, product)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
       }
     </div>
 
@@ -56,3 +73,5 @@
     }
   }
 </div>
+
+<app-slide-out-cart [open]="cartOpen" (closed)="closeCart()"></app-slide-out-cart>

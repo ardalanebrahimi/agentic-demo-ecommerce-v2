@@ -6,7 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CatalogService } from '../../../core/services/catalog.service';
+import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../core/models';
+import { SlideOutCartComponent } from '../../../shared/components/slide-out-cart/slide-out-cart.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,7 +18,8 @@ import { Product } from '../../../core/models';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    SlideOutCartComponent
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
@@ -24,10 +27,13 @@ import { Product } from '../../../core/models';
 export class ProductDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly catalogService = inject(CatalogService);
+  readonly cartService = inject(CartService);
 
   product: Product | null = null;
   loading = true;
   error: string | null = null;
+  cartOpen = false;
+  quantity = 1;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -48,5 +54,30 @@ export class ProductDetailComponent implements OnInit {
         console.error('Failed to load product', err);
       }
     });
+  }
+
+  incrementQuantity(): void {
+    this.quantity++;
+  }
+
+  decrementQuantity(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
+  addToCart(): void {
+    if (this.product) {
+      this.cartService.addToCart(this.product, this.quantity);
+      this.cartOpen = true;
+    }
+  }
+
+  openCart(): void {
+    this.cartOpen = true;
+  }
+
+  closeCart(): void {
+    this.cartOpen = false;
   }
 }
